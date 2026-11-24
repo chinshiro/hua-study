@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="小学学习导航：英语单词、英语句子跟读、数学思维、数学薄弱点训练、益智游戏。">
   <title>学习导航</title>
   <style>
     * {
@@ -16,50 +17,97 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 24px 16px;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
 
     .container {
-      text-align: center;
-      padding: 2rem;
       width: 100%;
-      max-width: 400px;
+      max-width: 460px;
+      text-align: center;
     }
 
     .title {
-      color: white;
-      font-size: 2rem;
+      color: #fff;
+      font-size: 1.9rem;
       font-weight: 700;
-      margin-bottom: 2rem;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      letter-spacing: 1px;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      margin-bottom: 28px;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 0.9rem;
     }
 
     .buttons {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 14px;
     }
 
     .btn {
-      display: block;
-      padding: 1.25rem 2rem;
-      color: white;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      color: #fff;
       text-decoration: none;
       border-radius: 16px;
-      font-size: 1.25rem;
-      font-weight: 600;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      text-align: left;
     }
 
     .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
     }
 
     .btn:active {
       transform: translateY(0);
+    }
+
+    .btn-icon {
+      flex: 0 0 44px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.25);
+      font-size: 1.35rem;
+    }
+
+    .btn-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .btn-name {
+      display: block;
+      font-size: 1.15rem;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .btn-desc {
+      display: block;
+      margin-top: 3px;
+      font-size: 0.78rem;
+      font-weight: 400;
+      opacity: 0.9;
+    }
+
+    .btn-arrow {
+      flex: 0 0 auto;
+      font-size: 1.1rem;
+      opacity: 0.8;
     }
 
     .btn-en {
@@ -77,18 +125,74 @@
     .btn-game {
       background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
     }
+
+    .footer {
+      margin-top: 26px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 380px) {
+      .title { font-size: 1.6rem; }
+      .btn { padding: 14px 14px; gap: 10px; }
+      .btn-icon { flex-basis: 38px; width: 38px; height: 38px; font-size: 1.15rem; }
+      .btn-name { font-size: 1.05rem; }
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1 class="title">学习导航</h1>
+    <p class="subtitle">选一个模块，开始今天的学习</p>
+
     <div class="buttons">
-      <a href="/en.html" class="btn btn-en">英语</a>
-      <a href="sx.html" class="btn btn-sx">数学思维</a>
-      <a href="sx-80.html" class="btn btn-sx80">数学训练80题</a>
-      <a href="game.html" class="btn btn-game">益智游戏</a>
-      <a href="/study-en" class="btn btn-en">英语句子</a>
+      <a href="english/english-words.html" class="btn btn-en">
+        <span class="btn-icon">📖</span>
+        <span class="btn-text">
+          <span class="btn-name">英语单词</span>
+          <span class="btn-desc">3–6 年级核心词汇 · 拼读记忆</span>
+        </span>
+        <span class="btn-arrow">›</span>
+      </a>
+
+      <a href="english/english-sentences.html" class="btn btn-en">
+        <span class="btn-icon">🗣️</span>
+        <span class="btn-text">
+          <span class="btn-name">英语句子</span>
+          <span class="btn-desc">100 句填空跟读 · 看中文说英文</span>
+        </span>
+        <span class="btn-arrow">›</span>
+      </a>
+
+      <a href="math/math-thinking.html" class="btn btn-sx">
+        <span class="btn-icon">🧠</span>
+        <span class="btn-text">
+          <span class="btn-name">数学思维</span>
+          <span class="btn-desc">奥数入门训练营 · 分专题闯关</span>
+        </span>
+        <span class="btn-arrow">›</span>
+      </a>
+
+      <a href="math/math-weakpoints-80.html" class="btn btn-sx80">
+        <span class="btn-icon">✏️</span>
+        <span class="btn-text">
+          <span class="btn-name">数学训练 80 题</span>
+          <span class="btn-desc">3 年级薄弱点专项 · 计算与应用</span>
+        </span>
+        <span class="btn-arrow">›</span>
+      </a>
+
+      <a href="game/puzzle-games.html" class="btn btn-game">
+        <span class="btn-icon">🎮</span>
+        <span class="btn-text">
+          <span class="btn-name">益智游戏</span>
+          <span class="btn-desc">闯关小游戏 · 练脑力与专注</span>
+        </span>
+        <span class="btn-arrow">›</span>
+      </a>
     </div>
+
+    <p class="footer">坚持每天一点点，进步看得见</p>
   </div>
 </body>
 </html>
