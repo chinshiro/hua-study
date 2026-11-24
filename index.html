@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>学习导航</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .container {
+      text-align: center;
+      padding: 2rem;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .title {
+      color: white;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .btn {
+      display: block;
+      padding: 1.25rem 2rem;
+      color: white;
+      text-decoration: none;
+      border-radius: 16px;
+      font-size: 1.25rem;
+      font-weight: 600;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-en {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .btn-sx {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    .btn-sx80 {
+      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    }
+
+    .btn-game {
+      background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">学习导航</h1>
+    <div class="buttons">
+      <a href="/en.html" class="btn btn-en">英语</a>
+      <a href="sx.html" class="btn btn-sx">数学思维</a>
+      <a href="sx-80.html" class="btn btn-sx80">数学训练80题</a>
+      <a href="game.html" class="btn btn-game">益智游戏</a>
+      <a href="/study-en" class="btn btn-en">英语句子</a>
+    </div>
+  </div>
+</body>
+</html>
