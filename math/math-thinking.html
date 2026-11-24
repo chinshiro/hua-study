@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>小学数学思维训练营 - 奥数入门</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #4f46e5; --primary-light: #e0e7ff; --success: #16a34a; --success-light: #dcfce7; --danger: #dc2626; --danger-light: #fee2e2; --warning: #f59e0b; --text-primary: #1f2937; --text-secondary: #6b7280; --bg-primary: #f3f4f6; --bg-white: #ffffff; --card-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06); --radius: 12px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; padding: 16px; padding-bottom: 40px; }
+        .header { text-align: center; padding: 20px 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: var(--radius); margin-bottom: 16px; color: white; }
+        .header h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+        .header .subtitle { font-size: 14px; opacity: 0.9; }
+        .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+        .stat-item { background: var(--bg-white); border-radius: var(--radius); padding: 12px 8px; text-align: center; box-shadow: var(--card-shadow); }
+        .stat-value { font-size: 22px; font-weight: 700; color: var(--primary); }
+        .stat-label { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+        .grade-selector { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
+        .grade-btn { flex: 1; min-width: 70px; padding: 10px 12px; border: 2px solid #e5e7eb; border-radius: var(--radius); background: var(--bg-white); font-size: 14px; font-weight: 500; color: var(--text-primary); cursor: pointer; transition: all 0.2s ease; text-align: center; }
+        .grade-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .grade-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+        .action-bar { display: flex; gap: 8px; margin-bottom: 16px; }
+        .action-btn { flex: 1; padding: 10px 16px; border: none; border-radius: var(--radius); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .action-btn.secondary { background: var(--bg-white); color: var(--text-secondary); box-shadow: var(--card-shadow); }
+        .action-btn.secondary:hover { background: var(--primary-light); color: var(--primary); }
+        .main-content { min-height: 300px; }
+        .course-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+        .course-card { background: var(--bg-white); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; box-shadow: var(--card-shadow); cursor: pointer; transition: all 0.2s ease; }
+        .course-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .course-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .course-title { font-size: 16px; font-weight: 600; color: var(--text-primary); }
+        .course-badge { font-size: 13px; font-weight: 600; color: var(--primary); background: var(--primary-light); padding: 2px 8px; border-radius: 12px; }
+        .course-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.5; }
+        .progress-bar { height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden; margin-bottom: 6px; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #7c3aed); border-radius: 3px; transition: width 0.3s ease; }
+        .progress-text { font-size: 12px; color: var(--text-secondary); }
+        .question-card { background: var(--bg-white); border-radius: var(--radius); padding: 20px; box-shadow: var(--card-shadow); margin-bottom: 16px; }
+        .question-number { display: inline-block; font-size: 13px; font-weight: 600; color: var(--primary); background: var(--primary-light); padding: 4px 10px; border-radius: 12px; margin-bottom: 12px; }
+        .question-hint { font-size: 13px; color: var(--warning); background: #fffbeb; border-left: 3px solid var(--warning); padding: 8px 12px; border-radius: 0 8px 8px 0; margin-bottom: 16px; }
+        .question-text { font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 20px; line-height: 1.6; }
+        .options-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+        .option-btn { padding: 14px 16px; border: 2px solid #e5e7eb; border-radius: var(--radius); background: var(--bg-white); font-size: 15px; font-weight: 500; color: var(--text-primary); cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 10px; text-align: left; }
+        .option-btn:hover:not(:disabled) { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+        .option-btn:disabled { cursor: default; }
+        .option-btn.correct { border-color: var(--success); background: var(--success-light); color: var(--success); }
+        .option-btn.wrong { border-color: var(--danger); background: var(--danger-light); color: var(--danger); }
+        .option-marker { width: 28px; height: 28px; border-radius: 50%; background: #e5e7eb; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+        .option-btn.correct .option-marker { background: var(--success); color: white; }
+        .option-btn.wrong .option-marker { background: var(--danger); color: white; }
+        .back-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--bg-white); border: none; border-radius: var(--radius); font-size: 14px; color: var(--text-secondary); cursor: pointer; margin-bottom: 16px; box-shadow: var(--card-shadow); transition: all 0.2s ease; }
+        .back-btn:hover { background: var(--primary-light); color: var(--primary); }
+        .feedback { padding: 12px 16px; border-radius: var(--radius); font-size: 14px; line-height: 1.6; display: none; }
+        .feedback.show { display: block; }
+        .feedback.correct { background: var(--success-light); color: var(--success); border: 1px solid #86efac; }
+        .feedback.wrong { background: var(--danger-light); color: var(--danger); border: 1px solid #fca5a5; }
+        .feedback-icon { margin-right: 6px; }
+        .nav-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .nav-btn { flex: 1; padding: 12px 20px; border: none; border-radius: var(--radius); font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+        .nav-btn.primary { background: var(--primary); color: white; }
+        .nav-btn.primary:hover:not(:disabled) { background: #4338ca; transform: translateY(-1px); }
+        .nav-btn.secondary { background: #e5e7eb; color: var(--text-primary); }
+        .nav-btn.secondary:hover:not(:disabled) { background: #d1d5db; }
+        .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .progress-tracker { background: white; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: var(--card-shadow); }
+        .tracker-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
+        .tracker-title { font-size: 16px; font-weight: 600; }
+        .tracker-stats { font-size: 14px; color: var(--text-secondary); }
+        .tracker-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+        .tracker-item { aspect-ratio: 1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+        .tracker-item.locked { background: #f0f0f0; color: #ccc; }
+        .tracker-item.completed { background: #f6ffed; color: var(--success); }
+        .badge-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 16px; }
+        .badge-item { background: white; border-radius: 12px; padding: 16px 8px; text-align: center; box-shadow: var(--card-shadow); transition: all 0.2s ease; }
+        .badge-item.locked { opacity: 0.5; filter: grayscale(1); }
+        .badge-icon { font-size: 32px; margin-bottom: 8px; }
+        .badge-name { font-size: 12px; color: var(--text-primary); font-weight: 500; }
+        .badge-desc { font-size: 10px; color: var(--text-secondary); margin-top: 4px; }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+        .modal-overlay.show { display: flex; }
+        .modal-content { background: white; border-radius: 16px; padding: 24px; max-width: 400px; width: 100%; text-align: center; animation: modalPop 0.3s ease; }
+        @keyframes modalPop { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        .modal-icon { font-size: 64px; margin-bottom: 16px; }
+        .modal-title { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+        .modal-text { font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6; }
+        .confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; }
+        .confetti-piece { position: absolute; width: 10px; height: 10px; top: -10px; animation: confettiFall 3s ease-out forwards; }
+        @keyframes confettiFall { to { top: 100%; transform: rotate(720deg); } }
+        @media (max-width: 480px) { .header h1 { font-size: 20px; } .question-text { font-size: 16px; } .options-container { grid-template-columns: 1fr; } .course-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🧠 小学数学思维训练营</h1>
+        <div class="subtitle">奥数入门 · 互动训练</div>
+    </div>
+    <div class="stats-bar">
+        <div class="stat-item"><div class="stat-value" id="totalScore">0</div><div class="stat-label">总积分</div></div>
+        <div class="stat-item"><div class="stat-value" id="correctCount">0</div><div class="stat-label">答对</div></div>
+        <div class="stat-item"><div class="stat-value" id="streak">0</div><div class="stat-label">连对</div></div>
+        <div class="stat-item"><div class="stat-value" id="level">1</div><div class="stat-label">等级</div></div>
+    </div>
+    <div class="grade-selector">
+        <button class="grade-btn active" data-grade="3">三年级</button>
+        <button class="grade-btn" data-grade="4">四年级</button>
+        <button class="grade-btn" data-grade="5">五年级</button>
+        <button class="grade-btn" data-grade="6">六年级</button>
+    </div>
+    <div class="action-bar" id="action-bar">
+        <button class="action-btn secondary" onclick="showProgress()">📊 学习进度</button>
+        <button class="action-btn secondary" onclick="showBadges()">🏅 成就徽章</button>
+    </div>
+    <div class="main-content">
+        <div id="course-view"><div class="course-grid" id="course-list"></div></div>
+        <div id="practice-view" style="display:none;"></div>
+    </div>
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <div class="modal-icon" id="modal-icon">🎉</div>
+            <div class="modal-title" id="modal-title">恭喜！</div>
+            <div class="modal-text" id="modal-text">你已完成挑战！</div>
+            <button class="nav-btn primary" onclick="closeModal('modal')">继续</button>
+        </div>
+    </div>
+    <div class="modal-overlay" id="progress-modal">
+        <div class="modal-content" style="max-width:600px;">
+            <div class="modal-title" style="margin-bottom:16px;">📊 学习进度</div>
+            <div class="progress-tracker">
+                <div class="tracker-header"><span class="tracker-title" id="progress-stats">0/0 题已完成</span></div>
+                <div class="tracker-grid" id="progress-grid"></div>
+            </div>
+            <button class="nav-btn primary" onclick="closeModal('progress-modal')" style="margin-top:16px;">关闭</button>
+        </div>
+    </div>
+    <div class="modal-overlay" id="badges-modal">
+        <div class="modal-content" style="max-width:500px;">
+            <div class="modal-title" style="margin-bottom:16px;">🏅 成就徽章</div>
+            <div class="badge-grid" id="badge-grid" style="padding:0;"></div>
+            <button class="nav-btn primary" onclick="closeModal('badges-modal')" style="margin-top:16px;">关闭</button>
+        </div>
+    </div>
+    <div class="confetti" id="confetti"></div>
+    <script>
+const Storage = { get(k, d=null) { try { const v=localStorage.getItem(k); return v?JSON.parse(v):d; } catch(e) { return d; } }, set(k,v) { try { localStorage.setItem(k,JSON.stringify(v)); } catch(e) { console.error(e); } }};
+let appState = { currentGrade:3, currentTab:'courses', currentCourse:null, currentQuestionIndex:0, score:Storage.get('score',0), correctCount:Storage.get('correctCount',0), streak:Storage.get('streak',0), level:Storage.get('level',1), completedQuestions:Storage.get('completedQuestions',{}), badges:Storage.get('badges',[]) };
+
+function randomInt(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+function shuffle(arr){const r=[...arr];for(let i=r.length-1;i>0;i--){const j=randomInt(0,i);[r[i],r[j]]=[r[j],r[i]];}return r;}
+function gcd(a,b){return b===0?a:gcd(b,a%b);}
+function lcm(a,b){return a*b/gcd(a,b);}
+function isPrime(n){if(n<2)return false;for(let i=2;i<=Math.sqrt(n);i++)if(n%i===0)return false;return true;}
+
+// ========== 题目生成器 ==========
+function generateQ(type, grade, idx) {
+    const r = (min,max)=>min+Math.floor(((idx*9301+49297)%233280)/(233280)*(max-min+1));
+    switch(type) {
+        // 三年级基础题型
+        case 'addition': {
+            const a=r(10,90),b=r(10,90),sum=a+b;
+            const opts=shuffle([sum,sum+r(1,5),sum-r(1,5),sum+10].filter(v=>v>0).slice(0,4));
+            return {type:'choice',hint:'尝试先凑整再计算！',question:`${a} + ${b} = ?`,options:opts.map(String),answer:String(sum),explanation:`凑整法：${a}+${b}=${sum}`};
+        }
+        case 'subtraction': {
+            const a=r(50,100),b=r(10,a-1),diff=a-b;
+            const opts=shuffle([diff,diff+r(1,3),diff-r(1,3),diff+5].filter(v=>v>0).slice(0,4));
+            return {type:'choice',hint:'从大数里去掉小数',question:`${a} - ${b} = ?`,options:opts.map(String),answer:String(diff),explanation:`${a}-${b}=${diff}`};
+        }
+        case 'multiplication': {
+            const a=r(2,9),b=r(2,9),prod=a*b;
+            const opts=shuffle([prod,prod+r(1,3),prod-r(1,3),prod+5].filter(v=>v>0).slice(0,4));
+            return {type:'choice',hint:'背诵乘法口诀',question:`${a} × ${b} = ?`,options:opts.map(String),answer:String(prod),explanation:`${a}×${b}=${prod}`};
+        }
+        case 'division': {
+            const b=r(2,9),q=r(2,9),a=b*q;
+            const opts=shuffle([q,q+r(1,2),q-r(1,2),q+3].filter(v=>v>0).slice(0,4));
+            return {type:'choice',hint:'除法是乘法的逆运算',question:`${a} ÷ ${b} = ?`,options:opts.map(String),answer:String(q),explanation:`${a}÷${b}=${q}`};
+        }
+        case 'pattern': {
+            const pType=r(0,3);
+            if(pType===0){const s=r(1,5),st=r(2,5),seq=Array.from({length:6},(_,i)=>s+i*st),miss=r(2,4),ans=seq[miss];
+                const opts=shuffle([ans,ans+r(1,3),ans-r(1,3),ans+5].filter(v=>v>0).slice(0,4));
+                return {type:'choice',hint:`规律：每次加${st}`,question:`找规律：${seq.map((v,i)=>i===miss?'?':v).join(', ')}，问号处？`,options:opts.map(String),answer:String(ans),explanation:`每次加${st}`};
+            }else if(pType===1){const s=r(1,3),ans=s*5;
+                const opts=shuffle([ans,ans+r(1,3),ans-r(1,3),ans+5].filter(v=>v>0).slice(0,4));
+                return {type:'choice',hint:`规律：${s}的倍数`,question:`找规律：${s}, ${s*2}, ${s*3}, ${s*4}, ?`,options:opts.map(String),answer:String(ans),explanation:`${s}的倍数`};
+            }else if(pType===2){
+                const opts=shuffle([25,24,26,20].filter(v=>v>0).slice(0,4));
+                return {type:'choice',hint:'平方数规律',question:`找规律：1, 4, 9, 16, ?`,options:opts.map(String),answer:'25',explanation:`平方数：1²,2²,3²,4²,5²`};
+            }else{const s=r(1,5),ans=s+10;
+                const opts=shuffle([ans,ans+r(1,2),ans-r(1,2),ans+5].filter(v=>v>0).slice(0,4));
+                return {type:'choice',hint:'差值递增',question:`找规律：${s}, ${s+1}, ${s+3}, ${s+6}, ?`,options:opts.map(String),answer:String(ans),explanation:`差值递增：+1,+2,+3,+4`};
+            }
+        }
+        case 'logic': {
+            const lt=r(0,2);
+            if(lt===0)return{type:'choice',hint:'仔细分析每个条件',question:'小明说："我养的不是猫"，小红说："我养的不是狗"，请问小明养的是什么？',options:shuffle(['猫','狗','兔']),answer:'狗',explanation:'小明养狗，小红养兔，小强养猫'};
+            if(lt===1)return{type:'choice',hint:'用排除法',question:'三个小朋友排队，甲不在第一位，乙不在第二位，丙排第几位？',options:['1','2','3'],answer:'1',explanation:'甲排第1位'};
+            return{type:'choice',hint:'分析大小关系',question:'有红蓝绿三个球，最大的不是红色，最小的是绿色，中间的是什么颜色？',options:['红色','蓝色','绿色'],answer:'蓝色',explanation:'中间是蓝色'};
+        }
+        case 'geometry': {
+            const gt=r(0,1);
+            if(gt===0){const n=r(3,6),cnt=n*(n-1)/2;
+                const opts=shuffle([cnt,cnt+1,cnt-1,cnt+2].filter(v=>v>0).slice(0,4));
+                return{type:'choice',hint:'画出来数一数',question:`一条线段上有${n}个点，共有多少条线段？`,options:opts.map(String),answer:String(cnt),explanation:`${n}个点有${cnt}条线段`};
+            }else{const m=r(2,4),n=r(2,4),cnt=m*n;
+                const opts=shuffle([cnt,cnt+1,cnt-1,cnt+2].slice(0,4));
+                return{type:'choice',hint:'长方形计数公式',question:`一个${m}×${n}的长方形网格，共有多少个长方形？`,options:opts.map(String),answer:String(cnt),explanation:`长方形总数=${cnt}`};
+            }
+        }
+        case 'word': {
+            const wt=r(0,2);
+            if(wt===0){const a=r(5,20),b=r(3,15),t=a+b;
+                const opts=shuffle([t,t+1,t-1,t+2].slice(0,4));
+                return{type:'choice',hint:'找出关键信息',question:`小明有${a}个苹果，小红有${b}个橙子，他们一共有多少个水果？`,options:opts.map(String),answer:String(t),explanation:`${a}+${b}=${t}`};
+            }else if(wt===1){const t=r(20,50),g=r(5,15),r2=t-g;
+                const opts=shuffle([r2,r2+1,r2-1,r2+2].filter(v=>v>0).slice(0,4));
+                return{type:'choice',hint:'从总数里减去',question:`篮子里有${t}个鸡蛋，拿走了${g}个，还剩多少个？`,options:opts.map(String),answer:String(r2),explanation:`${t}-${g}=${r2}`};
+            }else{const g=r(3,6),p=r(4,8),t=g*p;
+                const opts=shuffle([t,t+p,t-p,t+1].slice(0,4));
+                return{type:'choice',hint:'分组计算',question:`一班有${g}组同学，每组${p}人，全班共有多少人？`,options:opts.map(String),answer:String(t),explanation:`${g}×${p}=${t}`};
+            }
+        }
+        // 四年级题型
+        case 'multiplication2': {
+            const a=r(11,99),b=r(11,99),prod=a*b;
+            const opts=shuffle([prod,prod+r(10,50),prod-r(10,50),prod+100].filter(v=>v>0).slice(0,4));
+            return{type:'choice',hint:'拆分计算',question:`${a} × ${b} = ?`,options:opts.map(String),answer:String(prod),explanation:'竖式计算或拆分法'};
+        }
+        case 'division2': {
+            const b=r(11,99),q=r(11,99),a=b*q;
+            const opts=shuffle([q,q+r(1,5),q-r(1,5),q+10].filter(v=>v>0).slice(0,4));
+            return{type:'choice',hint:'除法是乘法的逆运算',question:`${a} ÷ ${b} = ?`,options:opts.map(String),answer:String(q),explanation:`${a}÷${b}=${q}`};
+        }
+        case 'sequence': {
+            const a1=r(1,10),d=r(2,5),n=r(5,10),an=a1+(n-1)*d;
+            const opts=shuffle([an,an+d,an-d,an+2*d].slice(0,4));
+            return{type:'choice',hint:'等差数列通项公式',question:`等差数列：${a1}, ${a1+d}, ${a1+2*d}, ... 第${n}项是多少？`,options:opts.map(String),answer:String(an),explanation:`a${n}=${a1}+(${n}-1)×${d}=${an}`};
+        }
+        case 'counting': {
+            const a=r(2,4),b=r(2,4),t=a*b;
+            const opts=shuffle([t,t+1,t-1,t+2].slice(0,4));
+            return{type:'choice',hint:'乘法原理',question:`从${a}个城市选1个，${b}条路线选1条，共有多少种走法？`,options:opts.map(String),answer:String(t),explanation:`${a}×${b}=${t}`};
+        }
+        case 'geometry2': {
+            const a=r(5,15),b=r(5,15),per=2*(a+b),area=a*b;
+            const opts=shuffle([`${per},${area}`,`${per+2},${area}`,`${per-2},${area}`,`${per},${area+1}`].slice(0,4));
+            return{type:'choice',hint:'记住周长和面积公式',question:`长方形长${a}cm，宽${b}cm，周长和面积分别是多少？`,options:opts,answer:`${per},${area}`,explanation:`周长=${per}cm，面积=${area}cm²`};
+        }
+        case 'logic2': {
+            const fruits=['苹果','香蕉','橙子'],people=['小明','小红','小华'];
+            return{type:'choice',hint:'画出表格帮助推理',question:`${people[0]}、${people[1]}、${people[2]}分别喜欢${fruits[0]}、${fruits[1]}、${fruits[2]}中的一种。已知：${people[0]}不喜欢${fruits[0]}，${people[1]}不吃${fruits[1]}，${people[2]}爱吃${fruits[2]}。请问${people[0]}喜欢什么？`,options:fruits,answer:fruits[1],explanation:'通过排除法推理'};
+        }
+        case 'measurement': {
+            const m=r(2,5),cm=r(10,99),total=m*100+cm;
+            const opts=shuffle([total,total+r(10,50),total-r(10,50),total+100].filter(v=>v>0).slice(0,4));
+            return{type:'choice',hint:'1米=100厘米',question:`${m}米${cm}厘米 = 多少厘米？`,options:opts.map(String),answer:String(total),explanation:`${m}米${cm}厘米=${total}厘米`};
+        }
+        case 'time': {
+            const h=r(1,11),m=r(10,50),startH=h,startM=m;
+            const addM=r(30,90),endM=startM+addM,endH=startH+Math.floor(endM/60);
+            const endMFinal=endM%60;
+            return{type:'choice',hint:'时间加法',question:`现在是${startH}时${startM}分，过了${addM}分钟后是几时几分？`,options:[`${endH}:${String(endMFinal).padStart(2,'0')}`,`${endH+1}:${String(endMFinal).padStart(2,'0')}`,`${endH-1}:${String(endMFinal).padStart(2,'0')}`,`${endH}:${String(endMFinal+10).padStart(2,'0')}`],answer:`${endH}:${String(endMFinal).padStart(2,'0')}`,explanation:`${startH}时${startM}分+${addM}分钟=${endH}时${endMFinal}分`};
+        }
+        // 五年级题型
+        case 'fraction': {
+            const num=r(1,9),den=r(2,9),sg=gcd(num,den);
+            const ans=`${num/sg}/${den/sg}`,orig=`${num}/${den}`;
+            const opts=shuffle([ans,orig,`${num+1}/${den}`,`${num}/${den+1}`].slice(0,4));
+            return{type:'choice',hint:'分子分母同除以最大公约数',question:`${num}/${den} 约分后是多少？`,options:opts,answer:ans,explanation:'分子分母同除以最大公约数'};
+        }
+        case 'decimal': {
+            const a=r(1,9)/10,b=r(1,9)/10,sum=(a+b).toFixed(1);
+            const opts=shuffle([sum,(parseFloat(sum)+0.1).toFixed(1),(parseFloat(sum)-0.1).toFixed(1),(parseFloat(sum)+1).toFixed(1)].slice(0,4));
+            return{type:'choice',hint:'小数点对齐',question:`${a.toFixed(1)} + ${b.toFixed(1)} = ?`,options:opts,answer:sum,explanation:`${a.toFixed(1)}+${b.toFixed(1)}=${sum}`};
+        }
+        case 'ratio': {
+            const a=r(2,6),b=r(2,6),part1=r(1,100);
+            let part1adj=part1;
+            while(part1adj%(a+b)!==0)part1adj++;
+            const part2=part1adj*b/a;
+            const opts=shuffle([part2,part2+a,part2-b,part2+a+b].slice(0,4));
+            return{type:'choice',hint:'找准单位"1"',question:`甲乙之比是${a}:${b}，甲有${part1adj}个，乙有多少个？`,options:opts.map(String),answer:String(part2),explanation:`${a}:${b}=${part1adj}:${part2}`};
+        }
+        case 'percentage': {
+            const pct=[10,20,25,30,40,50,60,75][r(0,7)],total=r(10,20)*100,part=total*pct/100;
+            const opts=shuffle([part,part+10,part-10,part+pct].slice(0,4));
+            return{type:'choice',hint:'百分数转小数计算',question:`${total}的${pct}%是多少？`,options:opts.map(String),answer:String(part),explanation:`${total}×${pct}%=${part}`};
+        }
+        case 'speed': {
+            const v1=r(40,80),v2=r(40,80),time=r(1,3),dist=(v1+v2)*time;
+            const opts=shuffle([dist,dist+v1,dist-v1,dist+10].slice(0,4));
+            return{type:'choice',hint:'画线段图帮助理解',question:`甲乙两人相向而行，甲速${v1}km/h，乙速${v2}km/h，${time}小时后相遇，两地相距多少km？`,options:opts.map(String),answer:String(dist),explanation:`(${v1}+${v2})×${time}=${dist}`};
+        }
+        case 'interest': {
+            const w1=r(10,20),w2=r(10,20),time=1/(1/w1+1/w2);
+            const ans=time%1===0?String(time):time.toFixed(1);
+            const opts=shuffle([ans,String(time+1),String(time-1)]);
+            return{type:'choice',hint:'把总量看作单位"1"',question:`一项工程，甲单独做${w1}天完成，乙单独做${w2}天完成，合作几天完成？`,options:opts,answer:ans,explanation:`合作效率=1/${w1}+1/${w2}`};
+        }
+        case 'equation': {
+            const x=r(2,10),a=r(2,5),b=r(1,10),result=a*x+b;
+            const opts=shuffle([x,x+1,x-1,x+2].slice(0,4));
+            return{type:'choice',hint:'先移项再求解',question:`解方程：${a}x + ${b} = ${result}，x = ?`,options:opts.map(String),answer:String(x),explanation:`${a}x=${result}-${b}=${result-b}，x=${x}`};
+        }
+        case 'circle': {
+            const r2=r(2,6),area=(3.14*r2*r2).toFixed(1);
+            const opts=shuffle([area,(3.14*r2*2).toFixed(1),(3.14*r2*r2*2).toFixed(1)].slice(0,4));
+            return{type:'choice',hint:'圆面积=πr²',question:`圆的半径${r2}cm，面积是多少？（π取3.14）`,options:opts,answer:area,explanation:`S=πr²=3.14×${r2}²=${area}`};
+        }
+        case 'probability': {
+            const red=r(2,5),blue=r(2,5);
+            const total = red+blue;
+            return{type:'choice',hint:'概率=目标情况数÷总情况数',question:`袋中有${red}个红球、${blue}个蓝球，随机摸一个，摸到红球的概率是多少？`,options:shuffle([`${red}/${total}`,`${blue}/${total}`,`${red}/${total-1}`,`${blue}/${total}`]),answer:`${red}/${total}`,explanation:`概率=${red}÷${total}=${red}/${total}`};
+        }
+        case 'number': {
+            const primes=[2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97];
+            const num=r(10,99),isP=primes.includes(num);
+            return{type:'choice',hint:'回忆质数合数的定义',question:`${num}是质数还是合数？`,options:['质数','合数'],answer:isP?'质数':'合数',explanation:isP?`${num}只有1和${num}两个因数`:`${num}除了1和${num}还有其他因数`};
+        }
+        case 'sequence2': {
+            const a1=r(1,5),d=r(2,4),n=r(5,8),sum=n*a1+n*(n-1)*d/2;
+            const opts=shuffle([sum,sum+d,sum-d,sum+n].slice(0,4));
+            return{type:'choice',hint:'等差数列求和公式',question:`等差数列：${a1}, ${a1+d}, ${a1+2*d}... 前${n}项和是多少？`,options:opts.map(String),answer:String(sum),explanation:`S${n}=${n}×${a1}+${n}(${n}-1)×${d}/2=${sum}`};
+        }
+        // 六年级题型
+        case 'competition': {
+            const age=r(8,15),motherAge=age*3,years=r(3,8),momYears=motherAge+years;
+            const opts=shuffle([momYears,momYears+years,momYears-years,age+years].slice(0,4));
+            return{type:'choice',hint:'仔细分析数量关系',question:`小明${age}岁，妈妈的年龄是小明的3倍。${years}年后，妈妈几岁？`,options:opts.map(String),answer:String(momYears),explanation:`妈妈现在${motherAge}岁，${years}年后${momYears}岁`};
+        }
+        case 'algebra': {
+            const x=r(2,10),a=r(2,5),result=a*x;
+            const opts=shuffle([x,x*a,x+a,x-a].slice(0,4));
+            return{type:'choice',hint:'逆运算',question:`一个数的${a}倍是${result}，这个数是多少？`,options:opts.map(String),answer:String(x),explanation:`${result}÷${a}=${x}`};
+        }
+        case 'volume': {
+            const l=r(5,15),w=r(5,15),h=r(5,15),vol=l*w*h;
+            const opts=shuffle([vol,vol+l,vol-w,vol+h].slice(0,4));
+            return{type:'choice',hint:'长方体体积=长×宽×高',question:`长方体长${l}cm，宽${w}cm，高${h}cm，体积是多少？`,options:opts.map(String),answer:String(vol),explanation:`V=${l}×${w}×${h}=${vol}cm³`};
+        }
+        case 'simplify': {
+            const a=r(2,10),b=r(2,10),g=gcd(a,b);
+            const simplified=`${a/g}/${b/g}`,original=`${a}/${b}`;
+            const opts=shuffle([simplified,original,`${a+1}/${b}`,`${a}/${b+1}`].slice(0,4));
+            return{type:'choice',hint:'分子分母同除以最大公约数',question:`${original} 约分后是多少？`,options:opts,answer:simplified,explanation:`${a}/${b}=${a/g}/${b/g}`};
+        }
+        case 'mixed': {
+            const a=r(1,5),b=r(1,5),sum=a+b;
+            return{type:'choice',hint:'同分母相加，分子相加',question:`${a}/${b} + ${(sum-a)}/${b} = ?`,options:['1','2','0','1/2'],answer:'1',explanation:'同分母相加，分子相加'};
+        }
+        default: {
+            const a=r(10,90),b=r(10,90),sum=a+b;
+            const opts=shuffle([sum,sum+r(1,5),sum-r(1,5),sum+10].filter(v=>v>0).slice(0,4));
+            return{type:'choice',hint:'尝试先凑整再计算！',question:`${a} + ${b} = ?`,options:opts.map(String),answer:String(sum),explanation:`凑整法：${a}+${b}=${sum}`};
+        }
+    }
+}
+
+// ========== 课程体系 ==========
+const courseData = {
+    3: [
+        {id:'g3_addition',title:'加减法巧算',desc:'学习凑整法、拆分法等简便计算方法',types:['addition','subtraction']},
+        {id:'g3_multiplication',title:'乘除法基础',desc:'表内乘除法熟练运用',types:['multiplication','division']},
+        {id:'g3_pattern',title:'找规律填数',desc:'探索数字排列的奥秘',types:['pattern']},
+        {id:'g3_logic',title:'简单逻辑推理',desc:'通过已知条件推断未知信息',types:['logic']},
+        {id:'g3_geometry',title:'图形计数',desc:'数线段、数三角形、数长方形',types:['geometry']},
+        {id:'g3_word',title:'基础应用题',desc:'两步计算的实际问题',types:['word']},
+        {id:'g3_measurement',title:'长度单位',desc:'米、分米、厘米的换算',types:['measurement']},
+        {id:'g3_time',title:'认识时间',desc:'时针、分针、秒针的认识',types:['time']},
+        {id:'g3_money',title:'认识人民币',desc:'元、角、分的换算与计算',types:['word']},
+        {id:'g3_shape',title:'图形认识',desc:'长方形、正方形、三角形的特征',types:['geometry']}
+    ],
+    4: [
+        {id:'g4_calc',title:'乘除法巧算',desc:'速算技巧与分配律应用',types:['multiplication2','division2']},
+        {id:'g4_sequence',title:'数列与等差',desc:'等差数列求和与项数计算',types:['sequence']},
+        {id:'g4_counting',title:'计数原理',desc:'加法原理、乘法原理初步',types:['counting']},
+        {id:'g4_geometry',title:'周长与面积',desc:'组合图形的周长面积计算',types:['geometry2']},
+        {id:'g4_logic',title:'逻辑推理进阶',desc:'表格推理、真假话问题',types:['logic2']},
+        {id:'g4_measurement',title:'单位换算',desc:'长度、重量、容量的换算',types:['measurement']},
+        {id:'g4_time',title:'时间计算',desc:'经过时间的计算',types:['time']},
+        {id:'g4_money',title:'小数加减',desc:'简单小数的加减运算',types:['decimal']},
+        {id:'g4_fraction',title:'分数初步',desc:'分数的认识与简单比较',types:['fraction']},
+        {id:'g4_pattern',title:'复杂规律',desc:'多维规律探索',types:['pattern']}
+    ],
+    5: [
+        {id:'g5_fraction',title:'分数巧算',desc:'分数加减乘除的速算技巧',types:['fraction','simplify']},
+        {id:'g5_decimal',title:'小数运算',desc:'小数加减乘除的熟练计算',types:['decimal']},
+        {id:'g5_ratio',title:'比例问题',desc:'按比例分配与比例计算',types:['ratio']},
+        {id:'g5_percentage',title:'百分数',desc:'百分数的意义与计算',types:['percentage']},
+        {id:'g5_speed',title:'行程问题',desc:'相遇、追及问题的解题策略',types:['speed']},
+        {id:'g5_interest',title:'工程问题',desc:'工作效率与时间的关系',types:['interest']},
+        {id:'g5_equation',title:'简易方程',desc:'列方程解应用题',types:['equation']},
+        {id:'g5_circle',title:'圆的认识',desc:'圆的周长与面积',types:['circle']},
+        {id:'g5_probability',title:'可能性',desc:'简单事件的概率计算',types:['probability']},
+        {id:'g5_number',title:'数论初步',desc:'质数合数、因数倍数',types:['number','sequence2']}
+    ],
+    6: [
+        {id:'g6_ratio',title:'比例与百分数',desc:'比例应用题与百分数计算',types:['ratio','percentage']},
+        {id:'g6_circle',title:'圆与扇形',desc:'圆的周长面积与组合图形',types:['circle']},
+        {id:'g6_equation',title:'方程与不等式',desc:'列方程解复杂应用题',types:['equation','algebra']},
+        {id:'g6_probability',title:'概率统计',desc:'可能性大小与数据分析',types:['probability']},
+        {id:'g6_competition',title:'竞赛综合',desc:'奥数综合题挑战',types:['competition','volume']},
+        {id:'g6_algebra',title:'代数初步',desc:'用字母表示数与简单方程',types:['algebra']},
+        {id:'g6_volume',title:'立体图形',desc:'长方体正方体的体积表面积',types:['volume']},
+        {id:'g6_simplify',title:'分数化简',desc:'分数的约分与通分',types:['simplify']},
+        {id:'g6_mixed',title:'混合运算',desc:'分数小数混合运算',types:['mixed']},
+        {id:'g6_exam',title:'综合测试',desc:'模拟考试题型训练',types:['competition','algebra','volume','simplify']}
+    ]
+};
+
+// ========== 生成题目数据 ==========
+function generateAllQuestions() {
+    for (const grade of [3,4,5,6]) {
+        for (const course of courseData[grade]) {
+            const allQuestions = [];
+            for (const type of course.types) {
+                for (let i = 0; i < 10; i++) {
+                    allQuestions.push(generateQ(type, grade, i + allQuestions.length));
+                }
+            }
+            course.questions = shuffle(allQuestions);
+        }
+    }
+}
+generateAllQuestions();
+
+// ========== 徽章系统 ==========
+const badges = [
+    {id:'first_step',name:'第一步',icon:'👶',desc:'完成第一道题',condition:s=>s.correctCount>=1},
+    {id:'streak_5',name:'连连看',icon:'🔥',desc:'连续答对5题',condition:s=>s.streak>=5},
+    {id:'streak_10',name:'势如破竹',icon:'⚡',desc:'连续答对10题',condition:s=>s.streak>=10},
+    {id:'score_100',name:'积分达人',icon:'💯',desc:'累计积分100',condition:s=>s.score>=100},
+    {id:'score_500',name:'积分高手',icon:'🏆',desc:'累计积分500',condition:s=>s.score>=500},
+    {id:'score_1000',name:'积分大师',icon:'👑',desc:'累计积分1000',condition:s=>s.score>=1000},
+    {id:'grade_3_complete',name:'三年级毕业',icon:'🎓',desc:'完成三年级所有课程',condition:s=>checkGradeComplete(s,3)},
+    {id:'grade_4_complete',name:'四年级毕业',icon:'🎓',desc:'完成四年级所有课程',condition:s=>checkGradeComplete(s,4)},
+    {id:'grade_5_complete',name:'五年级毕业',icon:'🎓',desc:'完成五年级所有课程',condition:s=>checkGradeComplete(s,5)},
+    {id:'grade_6_complete',name:'六年级毕业',icon:'🎓',desc:'完成六年级所有课程',condition:s=>checkGradeComplete(s,6)},
+    {id:'all_correct',name:'全对王',icon:'⭐',desc:'连续答对20题',condition:s=>s.streak>=20},
+    {id:'explorer',name:'探索者',icon:'🗺️',desc:'尝试所有题型',condition:s=>Object.keys(s.completedQuestions).length>=20}
+];
+
+function checkGradeComplete(state, grade) {
+    const courses = courseData[grade] || [];
+    return courses.every(course => {
+        const courseQuestions = course.questions || [];
+        return courseQuestions.every((_, idx) => {
+            const key = `${course.id}_${idx}`;
+            return state.completedQuestions[key] === true;
+        });
+    });
+}
+
+function checkBadges(state) {
+    const newBadges = [];
+    badges.forEach(badge => {
+        if (!state.badges.includes(badge.id) && badge.condition(state)) {
+            newBadges.push(badge.id);
+        }
+    });
+    if (newBadges.length > 0) {
+        state.badges = [...state.badges, ...newBadges];
+        Storage.set('badges', state.badges);
+        showModal('🏅', '获得新徽章！', newBadges.map(id => badges.find(b => b.id === id)?.name).join('、'));
+    }
+}
+
+// ========== UI 渲染 ==========
+function renderCourseList() {
+    const courses = courseData[appState.currentGrade] || [];
+    const container = document.getElementById('course-list');
+    container.innerHTML = courses.map((course, idx) => {
+        const completed = course.questions.filter((_, i) => appState.completedQuestions[`${course.id}_${i}`] === true).length;
+        const progress = Math.round(completed / course.questions.length * 100);
+        return `
+            <div class="course-card" onclick="startCourse(${idx})">
+                <div class="course-header">
+                    <span class="course-title">${course.title}</span>
+                    <span class="course-badge">${progress}%</span>
+                </div>
+                <div class="course-desc">${course.desc}</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
+                <div class="progress-text">${completed}/${course.questions.length} 题已完成</div>
+            </div>
+        `;
+    }).join('');
+}
+
+function renderPracticeQuestion() {
+    const courses = courseData[appState.currentGrade] || [];
+    if (!appState.currentCourse && appState.currentCourse !== 0) return;
+    const course = courses[appState.currentCourse];
+    if (!course) return;
+    const questions = course.questions || [];
+    if (appState.currentQuestionIndex >= questions.length) {
+        appState.currentQuestionIndex = 0;
+    }
+    const question = questions[appState.currentQuestionIndex];
+    const container = document.getElementById('practice-view');
+    const progress = ((appState.currentQuestionIndex) / questions.length * 100).toFixed(0);
+    container.innerHTML = `
+        <button class="back-btn" onclick="backToCourses()">← 返回课程</button>
+        <div class="question-card">
+            <span class="question-number">第 ${appState.currentQuestionIndex + 1}/${questions.length} 题</span>
+            <div class="progress-bar" style="margin-bottom:16px;"><div class="progress-fill" style="width:${progress}%"></div></div>
+            <div class="question-hint">💡 ${question.hint}</div>
+            <div class="question-text">${question.question}</div>
+            ${question.type === 'choice' ? `<div class="options-container">${question.options.map((opt, idx) => `<button class="option-btn" onclick="selectAnswer(${idx}, '${opt.replace(/'/g, "\\'")}')"><span class="option-marker">${String.fromCharCode(65 + idx)}</span><span>${opt}</span></button>`).join('')}</div>` : ''}
+            <div class="feedback" id="feedback"></div>
+        </div>
+        <div class="nav-buttons">
+            <button class="nav-btn secondary" onclick="prevQuestion()" ${appState.currentQuestionIndex === 0 ? 'disabled' : ''}>上一题</button>
+            <button class="nav-btn primary" onclick="nextQuestion()" ${appState.currentQuestionIndex === questions.length - 1 ? 'disabled' : ''}>下一题</button>
+        </div>
+    `;
+}
+
+function showProgress() {
+    const modal = document.getElementById('progress-modal');
+    const totalQuestions = Object.keys(appState.completedQuestions).length;
+    const allCourses = Object.values(courseData).flat();
+    const totalAll = allCourses.reduce((sum, c) => sum + (c.questions?.length || 0), 0);
+    const stats = document.getElementById('progress-stats');
+    stats.textContent = `${totalQuestions}/${totalAll} 题已完成`;
+    const grid = document.getElementById('progress-grid');
+    const allKeys = [];
+    allCourses.forEach(course => { (course.questions || []).forEach((_, i) => allKeys.push(`${course.id}_${i}`)); });
+    let html = '';
+    for (let i = 0; i < Math.min(allKeys.length, 60); i++) {
+        const key = allKeys[i];
+        const completed = appState.completedQuestions[key];
+        html += `<div class="tracker-item ${completed ? 'completed' : 'locked'}" title="第${i+1}题">${i + 1}</div>`;
+    }
+    grid.innerHTML = html;
+    modal.classList.add('show');
+}
+
+function showBadges() {
+    const modal = document.getElementById('badges-modal');
+    const grid = document.getElementById('badge-grid');
+    grid.innerHTML = badges.map(badge => {
+        const unlocked = appState.badges.includes(badge.id);
+        return `
+            <div class="badge-item ${unlocked ? '' : 'locked'}">
+                <div class="badge-icon">${badge.icon}</div>
+                <div class="badge-name">${badge.name}</div>
+                <div class="badge-desc">${badge.desc}</div>
+            </div>
+        `;
+    }).join('');
+    modal.classList.add('show');
+}
+
+function closeModal(id) {
+    document.getElementById(id).classList.remove('show');
+}
+
+// ========== 交互逻辑 ==========
+function selectAnswer(idx, value) {
+    const courses = courseData[appState.currentGrade] || [];
+    if (!appState.currentCourse || appState.currentCourse >= courses.length) return;
+    const course = courses[appState.currentCourse];
+    const question = course.questions[appState.currentQuestionIndex];
+    if (!question) return;
+    const buttons = document.querySelectorAll('.option-btn');
+    buttons.forEach((btn, i) => {
+        btn.disabled = true;
+        if (question.options[i] === question.answer) btn.classList.add('correct');
+        else if (i === idx && value !== question.answer) btn.classList.add('wrong');
+    });
+    const feedback = document.getElementById('feedback');
+    const isCorrect = value === question.answer;
+    if (isCorrect) {
+        feedback.className = 'feedback show correct';
+        feedback.innerHTML = `<span class="feedback-icon">✅</span>回答正确！${question.explanation}`;
+        appState.score += 10;
+        appState.correctCount++;
+        appState.streak++;
+        const key = `${course.id}_${appState.currentQuestionIndex}`;
+        appState.completedQuestions[key] = true;
+        checkBadges(appState);
+        showConfetti();
+    } else {
+        feedback.className = 'feedback show wrong';
+        feedback.innerHTML = `<span class="feedback-icon">❌</span>答错了，正确答案是 ${question.answer}。${question.explanation}`;
+        appState.streak = 0;
+    }
+    Storage.set('score', appState.score);
+    Storage.set('correctCount', appState.correctCount);
+    Storage.set('streak', appState.streak);
+    Storage.set('completedQuestions', appState.completedQuestions);
+    updateStats();
+}
+
+function startCourse(idx) {
+    appState.currentCourse = idx;
+    appState.currentQuestionIndex = 0;
+    document.getElementById('course-view').style.display = 'none';
+    document.getElementById('practice-view').style.display = 'block';
+    renderPracticeQuestion();
+}
+
+function backToCourses() {
+    appState.currentCourse = null;
+    appState.currentQuestionIndex = 0;
+    document.getElementById('course-view').style.display = 'block';
+    document.getElementById('practice-view').style.display = 'none';
+    renderCourseList();
+}
+
+function prevQuestion() {
+    if (appState.currentQuestionIndex > 0) {
+        appState.currentQuestionIndex--;
+        renderPracticeQuestion();
+    }
+}
+
+function nextQuestion() {
+    const courses = courseData[appState.currentGrade] || [];
+    const course = courses[appState.currentCourse];
+    if (!course) return;
+    if (appState.currentQuestionIndex < (course.questions?.length || 0) - 1) {
+        appState.currentQuestionIndex++;
+        renderPracticeQuestion();
+    }
+}
+
+function updateStats() {
+    document.getElementById('totalScore').textContent = appState.score;
+    document.getElementById('correctCount').textContent = appState.correctCount;
+    document.getElementById('streak').textContent = appState.streak;
+    appState.level = Math.floor(appState.score / 100) + 1;
+    document.getElementById('level').textContent = appState.level;
+    Storage.set('level', appState.level);
+}
+
+// ========== 特效 ==========
+function showConfetti() {
+    const container = document.getElementById('confetti');
+    const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dfe6e9'];
+    for (let i = 0; i < 30; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = Math.random() * 100 + '%';
+        piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDelay = Math.random() * 0.5 + 's';
+        piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+        container.appendChild(piece);
+    }
+    setTimeout(() => { container.innerHTML = ''; }, 3000);
+}
+
+function showModal(icon, title, text) {
+    document.getElementById('modal-icon').textContent = icon;
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-text').textContent = text;
+    document.getElementById('modal').classList.add('show');
+}
+
+function closeModal(id) {
+    if (id) document.getElementById(id).classList.remove('show');
+}
+
+// ========== 初始化 ==========
+function init() {
+    document.querySelectorAll('.grade-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.grade-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            appState.currentGrade = parseInt(btn.dataset.grade);
+            appState.currentCourse = null;
+            appState.currentQuestionIndex = 0;
+            document.getElementById('course-view').style.display = 'block';
+            document.getElementById('practice-view').style.display = 'none';
+            renderCourseList();
+        });
+    });
+    document.getElementById('modal')?.addEventListener('click', (e) => { if (e.target.id === 'modal') closeModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { document.querySelectorAll('.modal-overlay.show').forEach(m => m.classList.remove('show')); } });
+    renderCourseList();
+    updateStats();
+}
+init();
+    </script>
+</body>
+</html>
